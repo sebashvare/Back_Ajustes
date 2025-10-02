@@ -94,7 +94,10 @@ class AjusteFinanciero(models.Model):
     monto = models.DecimalField(
         max_digits=15, 
         decimal_places=2,
-        validators=[MinValueValidator(Decimal('0.01'))]
+        validators=[
+            MaxValueValidator(Decimal('-0.01'), message="El valor del ajuste debe ser negativo"),
+            MinValueValidator(Decimal('-999999999999.99'), message="El valor excede el límite mínimo permitido")
+        ]
     )
     moneda = models.CharField(max_length=3, default='COP')
     

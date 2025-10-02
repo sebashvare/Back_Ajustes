@@ -97,10 +97,10 @@ class RegistroAjuste(models.Model):
         max_digits=15,
         decimal_places=2,
         verbose_name="Valor Ajustado",
-        help_text="Monto del ajuste en pesos colombianos (no puede ser cero)",
+        help_text="Monto del ajuste en pesos colombianos (debe ser negativo para deducciones)",
         validators=[
-            MinValueValidator(Decimal('0.01'), message="El valor debe ser mayor a cero"),
-            MaxValueValidator(Decimal('999999999999.99'), message="El valor excede el límite permitido")
+            MaxValueValidator(Decimal('-0.01'), message="El valor del ajuste debe ser negativo"),
+            MinValueValidator(Decimal('-999999999999.99'), message="El valor excede el límite mínimo permitido")
         ]
     )
     
@@ -197,9 +197,9 @@ class RegistroAjuste(models.Model):
         if self.fecha_ajuste and self.fecha_ajuste > date.today():
             errors['fecha_ajuste'] = "La fecha del ajuste no puede ser futura"
         
-        # Validar que el valor no sea cero
-        if self.valor_ajustado and self.valor_ajustado == 0:
-            errors['valor_ajustado'] = "El valor del ajuste no puede ser cero"
+        # Validar que el valor sea negativo (ajustes son deducciones)
+        if self.valor_ajustado and self.valor_ajustado >= 0:
+            errors['valor_ajustado'] = "El valor del ajuste debe ser negativo (representa una deducción)"
         
         # Validar longitud mínima de justificación
         if self.justificacion and len(self.justificacion.strip()) < 10:
@@ -245,14 +245,15 @@ class RegistroAjuste(models.Model):
     @property
     def es_ajuste_alto_valor(self):
         """
-        Determinar si el ajuste requiere aprobación especial.
+        Determinar si el ajuste requiere aprobación especial por su magnitud.
         
         Returns:
             bool: True si requiere aprobación especial
         """
         from django.conf import settings
         limite = getattr(settings, 'ADJUSTMENTS_SETTINGS', {}).get('REQUIRE_APPROVAL_ABOVE', 100000)
-        return self.valor_ajustado >= limite
+        # Usar valor absoluto para comparar la magnitud del ajuste
+        return abs(self.valor_ajustado) >= limite
     
     @property
     def edad_registro(self):
