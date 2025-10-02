@@ -15,6 +15,7 @@ router.register(r'users', views.UserViewSet)
 urlpatterns = [
     # JWT Token endpoints
     path('token/', views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/', views.CustomTokenObtainPairView.as_view(), name='login'),  # Alias para frontend
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     
