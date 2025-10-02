@@ -83,7 +83,8 @@ class RegistroAjusteSerializer(serializers.ModelSerializer):
         # Configuración adicional para optimización
         extra_kwargs = {
             'valor_ajustado': {
-                'min_value': Decimal('0.01'),
+                'max_value': Decimal('-0.01'),  # Debe ser negativo
+                'min_value': Decimal('-999999999999.99'),  # Límite mínimo
                 'max_digits': 15,
                 'decimal_places': 2,
             },
@@ -165,20 +166,20 @@ class RegistroAjusteSerializer(serializers.ModelSerializer):
         Raises:
             serializers.ValidationError: Si el valor no cumple las reglas
         """
-        if value <= 0:
+        if value >= 0:
             raise serializers.ValidationError(
-                "El valor del ajuste debe ser mayor a cero."
+                "El valor del ajuste debe ser negativo (representa una deducción)."
             )
         
-        # Validar límite máximo desde configuración
+        # Validar límite máximo desde configuración (usando valor absoluto)
         from django.conf import settings
         max_value = getattr(settings, 'ADJUSTMENTS_SETTINGS', {}).get(
             'MAX_ADJUSTMENT_VALUE', 10000000
         )
         
-        if value > max_value:
+        if abs(value) > max_value:
             raise serializers.ValidationError(
-                f"El valor del ajuste no puede exceder ${max_value:,.2f}"
+                f"El valor absoluto del ajuste no puede exceder ${max_value:,.2f}"
             )
         
         return value
@@ -227,8 +228,8 @@ class RegistroAjusteSerializer(serializers.ModelSerializer):
         valor_ajustado = attrs.get('valor_ajustado')
         justificacion = attrs.get('justificacion', '')
         
-        # Ajustes de alto valor requieren justificación más detallada
-        if valor_ajustado and valor_ajustado >= 100000:
+        # Ajustes de alto valor requieren justificación más detallada (usar valor absoluto)
+        if valor_ajustado and abs(valor_ajustado) >= 100000:
             if len(justificacion.strip()) < 50:
                 raise serializers.ValidationError({
                     'justificacion': 'Ajustes de alto valor requieren justificación detallada (mínimo 50 caracteres).'
