@@ -1,0 +1,129 @@
+# =============================================================================
+# DOCKER COMPOSE - SISTEMA DE REGISTRO DE AJUSTES
+# =============================================================================
+# Configuración completa para desarrollo y producción local
+# Incluye base de datos PostgreSQL, Redis y la aplicación Django
+
+version: '3.8'
+
+services:
+  # ===========================================================================
+  # BASE DE DATOS POSTGRESQL
+  # ===========================================================================
+  db:
+    image: postgres:15-alpine
+    container_name: registro_ajustes_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: registro_ajustes_prod
+      POSTGRES_USER: registro_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-super_secure_password_change_me}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U registro_user -d registro_ajustes_prod"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ===========================================================================
+  # CACHE REDIS
+  # ===========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: registro_ajustes_redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_password_change_me}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ===========================================================================
+  # APLICACIÓN DJANGO
+  # ===========================================================================
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: registro_ajustes_web
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-change-this-secret-key-in-production}
+      - DATABASE_URL=postgresql://registro_user:${DB_PASSWORD:-super_secure_password_change_me}@db:5432/registro_ajustes_prod
+      - REDIS_URL=redis://:{REDIS_PASSWORD:-redis_password_change_me}@redis:6379/1
+      - ALLOWED_HOSTS=localhost,127.0.0.1,${DOMAIN_NAME:-yourdomain.com}
+      - CORS_ALLOWED_ORIGINS=https://${DOMAIN_NAME:-yourdomain.com},http://localhost:3000
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_files:/app/staticfiles
+      - media_files:/app/media
+      - ./logs:/var/log/registro_ajustes
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/admin/login/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ===========================================================================
+  # SERVIDOR WEB NGINX (OPCIONAL)
+  # ===========================================================================
+  nginx:
+    image: nginx:alpine
+    container_name: registro_ajustes_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_files:/var/www/static:ro
+      - media_files:/var/www/media:ro
+      - ./ssl:/etc/ssl/certs:ro
+    depends_on:
+      - web
+    networks:
+      - app_network
+
+# =============================================================================
+# VOLÚMENES PERSISTENTES
+# =============================================================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  static_files:
+    driver: local
+  media_files:
+    driver: local
+
+# =============================================================================
+# REDES
+# =============================================================================
+networks:
+  app_network:
+    driver: bridge

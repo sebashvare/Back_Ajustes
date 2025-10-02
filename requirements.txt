@@ -1,0 +1,26 @@
+# =============================================================================
+# DEPENDENCIAS ESENCIALES - SISTEMA DE REGISTRO DE AJUSTES
+# =============================================================================
+
+# Framework principal
+Django==5.2
+
+# API REST y autenticación
+djangorestframework==3.16.1
+djangorestframework-simplejwt==5.5.1
+django-cors-headers==4.9.0
+django-filter==25.1
+
+# Configuración y variables de entorno
+python-decouple==3.8
+dj-database-url==2.1.0
+
+# Base de datos PostgreSQL (producción)
+psycopg2-binary==2.9.10
+
+# Servidor para producción
+gunicorn==21.2.0
+whitenoise==6.6.0
+
+# Exportación de datos
+openpyxl==3.1.2
