@@ -57,7 +57,6 @@ class RegistroAjusteSerializer(serializers.ModelSerializer):
             'fecha_ajuste',
             'asesor_que_ajusto',
             'valor_ajustado',
-            'obs_adicional',
             'justificacion',
             
             # Campos de auditoría
@@ -83,19 +82,10 @@ class RegistroAjusteSerializer(serializers.ModelSerializer):
         # Configuración adicional para optimización
         extra_kwargs = {
             'valor_ajustado': {
-                'max_value': Decimal('-0.01'),  # Debe ser negativo
-                'min_value': Decimal('-999999999999.99'),  # Límite mínimo
-                'max_digits': 15,
-                'decimal_places': 2,
-            },
-            'justificacion': {
-                'min_length': 10,
-                'max_length': 2000,
-            },
-            'obs_adicional': {
-                'max_length': 1000,
-                'allow_blank': True,
-            },
+                'error_messages': {
+                    'invalid': 'El valor debe ser un número válido.'
+                }
+            }
         }
     
     def get_valor_ajustado_display(self, obj):

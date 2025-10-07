@@ -39,7 +39,6 @@ class RegistroAjuste(models.Model):
         fecha_ajuste (date): Fecha en la que se realiza el ajuste
         asesor_que_ajusto (str): Nombre del asesor responsable del ajuste
         valor_ajustado (Decimal): Monto del ajuste en valor monetario
-        obs_adicional (str): Observaciones adicionales opcionales
         justificacion (str): Justificación requerida para el ajuste
         created_at (datetime): Timestamp de creación del registro
         updated_at (datetime): Timestamp de última actualización
@@ -102,13 +101,6 @@ class RegistroAjuste(models.Model):
             MaxValueValidator(Decimal('-0.01'), message="El valor del ajuste debe ser negativo"),
             MinValueValidator(Decimal('-999999999999.99'), message="El valor excede el límite mínimo permitido")
         ]
-    )
-    
-    obs_adicional = models.TextField(
-        blank=True,
-        verbose_name="Observaciones Adicionales",
-        help_text="Observaciones adicionales sobre el ajuste (opcional)",
-        max_length=1000
     )
     
     justificacion = models.TextField(

@@ -1,7 +1,9 @@
 # 🏦 Sistema de Registro de Ajustes Financieros - Backend
 
 > **API REST para gestión integral de ajustes contables y financieros**  
-> Backend desarrollado en Django 5.2 compatible con frontend Svelte
+> Backend desarrollado en Dj    "asesor_que_ajusto": "María González",
+    "valor_ajustado": "-150000.00",
+    "justificacion": "Cliente reportó diferencia en facturación vs servicios recibidos", 5.2 compatible con frontend Svelte
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
 [![Django](https://img.shields.io/badge/Django-5.2-green.svg)](https://djangoproject.com)
@@ -43,7 +45,6 @@ RegistroAjuste:
 ├── fecha_ajuste           # Cuándo se realiza el ajuste
 ├── asesor_que_ajusto      # Responsable del ajuste
 ├── valor_ajustado         # Monto del ajuste (positivo/negativo)
-├── obs_adicional          # Observaciones opcionales
 ├── justificacion          # Justificación obligatoria
 └── metadatos_auditoria    # Timestamps y usuario que creó
 ```
@@ -161,7 +162,6 @@ POST /api/registros/
   "fecha_ajuste": "2025-10-02",
   "asesor_que_ajusto": "María González",
   "valor_ajustado": "150000.00",
-  "obs_adicional": "Cliente reportó sobrefacturación",
   "justificacion": "Ajuste por diferencia entre servicios facturados vs servicios efectivamente prestados según acuerdo comercial"
 }
 ```
@@ -176,7 +176,6 @@ POST /api/registros/
   "fecha_ajuste": "2025-10-02",
   "asesor_que_ajusto": "María González",
   "valor_ajustado": "150000.00",
-  "obs_adicional": "Cliente reportó sobrefacturación",
   "justificacion": "Ajuste por diferencia entre servicios facturados...",
   "created_at": "2025-10-02T10:30:00Z",
   "updated_at": "2025-10-02T10:30:00Z",
@@ -383,7 +382,6 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
   "fecha_ajuste": "2025-10-01",
   "asesor_que_ajusto": "María González",
   "valor_ajustado": "150000.00",
-  "obs_adicional": "Observaciones adicionales",
   "justificacion": "Justificación del ajuste",
   "created_at": "2025-10-01T14:02:21Z",
   "updated_at": "2025-10-01T14:02:21Z"

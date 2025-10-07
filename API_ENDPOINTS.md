@@ -68,7 +68,6 @@ GET /api/registros/?page=1&page_size=10
       "fecha_ajuste": "2025-09-26",
       "asesor_que_ajusto": "María González",
       "valor_ajustado": "150000.00",
-      "obs_adicional": "Ajuste por sobrefacturación...",
       "justificacion": "Cliente reportó diferencia...",
       "created_at": "2025-10-01T14:02:21Z",
       "updated_at": "2025-10-01T14:02:21Z"
@@ -101,10 +100,9 @@ Content-Type: application/json
   "id_acuerdo_servicio": "AS-006-2025",
   "id_cargo_facturable": "CF-006-2025",
   "fecha_ajuste": "2025-10-01",
-  "asesor_que_ajusto": "Nuevo Asesor",
-  "valor_ajustado": "120000.00",
-  "obs_adicional": "Observaciones adicionales",
-  "justificacion": "Justificación del ajuste"
+  "asesor_que_ajusto": "Juan Pérez",
+  "valor_ajustado": "-250000.00",
+  "justificacion": "Ajuste por diferencia detectada en auditoría interna"
 }
 ```
 
@@ -199,7 +197,6 @@ Los campos del modelo están exactamente como los espera el frontend:
 - `fecha_ajuste` (date)
 - `asesor_que_ajusto` (string)
 - `valor_ajustado` (decimal)
-- `obs_adicional` (text, opcional)
 - `justificacion` (text)
 - `created_at` (datetime, auto)
 - `updated_at` (datetime, auto)

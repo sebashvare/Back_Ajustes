@@ -51,7 +51,6 @@ def crear_datos_ejemplo():
             'fecha_ajuste': date.today() - timedelta(days=5),
             'asesor_que_ajusto': 'María González',
             'valor_ajustado': Decimal('-150000.00'),
-            'obs_adicional': 'Ajuste por sobrefacturación en servicios de consultoría',
             'justificacion': 'Cliente reportó diferencia en facturación vs servicios recibidos',
         },
         {
@@ -61,7 +60,6 @@ def crear_datos_ejemplo():
             'fecha_ajuste': date.today() - timedelta(days=3),
             'asesor_que_ajusto': 'Carlos Rodríguez',
             'valor_ajustado': Decimal('-75000.00'),
-            'obs_adicional': 'Corrección por error en cálculo de impuestos',
             'justificacion': 'Error detectado en auditoria interna',
         },
         {
@@ -71,7 +69,6 @@ def crear_datos_ejemplo():
             'fecha_ajuste': date.today() - timedelta(days=1),
             'asesor_que_ajusto': 'Ana Martínez',
             'valor_ajustado': Decimal('-250000.00'),
-            'obs_adicional': 'Ajuste por descuento acordado no aplicado',
             'justificacion': 'Descuento corporativo del 15% no fue aplicado en la facturación original',
         },
         {
@@ -81,7 +78,6 @@ def crear_datos_ejemplo():
             'fecha_ajuste': date.today(),
             'asesor_que_ajusto': 'Luis Torres',
             'valor_ajustado': Decimal('-95000.00'),
-            'obs_adicional': 'Ajuste por cambio en alcance del proyecto',
             'justificacion': 'Cliente solicitó reducción en el alcance del servicio',
         },
         {
@@ -91,7 +87,6 @@ def crear_datos_ejemplo():
             'fecha_ajuste': date.today() - timedelta(days=7),
             'asesor_que_ajusto': 'Patricia Vega',
             'valor_ajustado': Decimal('-180000.00'),
-            'obs_adicional': 'Corrección por duplicación de cargos',
             'justificacion': 'Se detectó duplicación en la facturación de servicios mensuales',
         }
     ]
